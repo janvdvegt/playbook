@@ -29,16 +29,23 @@ class BaseTransition:
             return 1.
         return self.interpolator.interpolator_value((frame - self.start_frame) / (self.end_frame - self.start_frame))
 
-    def _apply_attribute_transition(self, start_value, end_value, interpolator_value: float):
-        raise NotImplementedError("BaseTransition class")
+    def _apply_attribute_transition(self, start_value, end_value, interpolator_value: float, attribute_type: type):
+        if attribute_type == "color":
+            return start_value
+        if attribute_type == float or attribute_type == int:
+            return (1 - interpolator_value) * start_value + interpolator_value * end_value
+        raise ValueError(f"Don't understand type {attribute_type}")
 
-    def apply_transition(self, frame: int, current_values: dict) -> dict:
+    def apply_transition(self, frame: int, current_values: dict, attribute_dict: dict) -> dict:
         return_dict = dict()
         for attribute in self.attributes:
             updated_value = self._apply_attribute_transition(start_value=self.start_values[attribute],
                                                              end_value=self.end_values[attribute],
-                                                             interpolator_value=self._get_interpolator_value(frame=frame))
+                                                             interpolator_value=self._get_interpolator_value(frame=frame),
+                                                             attribute_type=attribute_dict[attribute]["type"])
             return_dict[attribute] = self.calculate_updated_attribute(current_values[attribute], updated_value)
+            if attribute_dict[attribute]["type"] == int:
+                return_dict[attribute] = int(round(return_dict[attribute]))
         return return_dict
 
     def calculate_updated_attribute(self, original_value, updated_value):

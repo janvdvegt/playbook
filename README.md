@@ -16,10 +16,6 @@ Transitions are objects that change the behaviour and looks of components.
 
 ## TODO
 
-### Attributes
-
-Currently the attributes are a big mess, we need a registration process that explains a number of meta attributes. These include whether they can be part of a transition, whether they scale with resizing (for supersampling and for resize style transitions) and if they are integer, float or color.
-
 ### Color
 
 Currently, color cannot be transitioned yet. It is probably best to add a Color class.

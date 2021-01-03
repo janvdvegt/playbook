@@ -13,23 +13,24 @@ secondary_color = "#232528"
 
 config = Config(primary_color=primary_color, secondary_color=secondary_color, background_color=background_color)
 
-playbook = Playbook(width=800, height=600, number_frames=51)
+playbook = Playbook(width=1920, height=1080, number_frames=51, supersample_rate=4)
 
 with playbook.with_group("rectangles"):
     for x in range(3):
         for y in range(3):
             rectangle = Rectangle(x=150 + x * 100, y=150 + y * 100, width=90, height=90, line_width=3,
                                   fill_color=config.primary_color, line_color=config.secondary_color,
-                                  text=f"({x},{y})", font_size=40, font_color="#ffffff")
+                                  text=f"({x},{y})", font_size=25, font_color="#ffffff")
             playbook.add_component(rectangle)
     playbook.add_transition_to_group(DeltaTransition(start_values={'x': 0, 'y': 0},
                                                      end_values={'x': -50, 'y': -50},
                                                      start_frame=1, end_frame=50,
                                                      interpolator='sigmoid'))
-    playbook.add_transition_to_group(MultiplicativeTransition(start_values={'width': 1., 'height': 1., 'x': 1.0, 'y': 1.0},
-                                                              end_values={'width': 0.5, 'height': 0.5, 'x': 0.5, 'y': 0.5},
+    playbook.add_transition_to_group(MultiplicativeTransition(start_values={'width': 1., 'height': 1., 'x': 1.0, 'y': 1.0, 'font_size': 1.0},
+                                                              end_values={'width': 0.5, 'height': 0.5, 'x': 0.5, 'y': 0.5, 'font_size': 0.5},
                                                               start_frame=1, end_frame=50,
                                                               interpolator='sigmoid',
                                                               supersample_scalable=False))
 
+print(playbook.components[0].attribute_dict)
 playbook.render('test.mp4', config=config)

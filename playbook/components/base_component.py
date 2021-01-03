@@ -2,17 +2,22 @@ from PIL import Image
 
 from config.config import Config
 from transitions import BaseTransition
+from utils import attribute
 
 
 class BaseComponent:
-    def __init__(self, x: int, y: int, text : str = '', font_size: int = 20, font_color: str = "#000000"):
-        self.x = x
-        self.y = y
+    @attribute(name='x', type=float, scalable=True)
+    @attribute(name='y', type=float, scalable=True)
+    @attribute(name='font_size', type=int, scalable=True)
+    @attribute(name='font_color', type="color", scalable=False)
+    def __init__(self, x: int, y: int, text: str = '', font_size: int = 20, font_color: str = "#000000", **kwargs):
         self.text = text
-        self.font_size = font_size
-        self.font_color = font_color
         self.groups = []
         self.transitions = []
+        self.attribute_dict = {}
+
+    def _register_attribute(self, name, type, scalable=True):
+        self.attribute_dict[name] = {'type': type, 'scalable': scalable}
 
     def _get_transitionable_attribute_dict(self):
         attributes = self._transitionable_attributes()
@@ -22,15 +27,15 @@ class BaseComponent:
         return return_dict
 
     def _transitionable_attributes(self):
-        return ('x', 'y', 'font_size', 'font_color')
+        return list(self.attribute_dict.keys())
 
     def _scaling_attributes(self):
-        return ('x', 'y', 'font_size')
+        return [key for key in self.attribute_dict.keys() if self.attribute_dict[key]["scalable"]]
 
     def apply_transitions(self, frame: int):
         attribute_values = self._get_transitionable_attribute_dict()
         for transition in self.transitions:
-            updated_attribute_values = transition.apply_transition(frame, attribute_values)
+            updated_attribute_values = transition.apply_transition(frame, attribute_values, self.attribute_dict)
             attribute_values.update(updated_attribute_values)
         return attribute_values
 

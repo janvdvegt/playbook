@@ -2,22 +2,17 @@ from PIL import Image, ImageDraw, ImageFont
 
 from config.config import Config
 from components.base_component import BaseComponent
+from utils import attribute
 
 
 class Ellipse(BaseComponent):
+    @attribute(name="width", type=float, scalable=True)
+    @attribute(name="height", type=float, scalable=True)
+    @attribute(name="line_width", type=float, scalable=True)
+    @attribute(name="fill_color", type="color", scalable=False)
+    @attribute(name="line_color", type="color", scalable=False)
     def __init__(self, x: int, y: int, width: int, height: int, fill_color, line_color, line_width: int = 1, **kwargs):
         super().__init__(x=x, y=y, **kwargs)
-        self.fill_color = fill_color
-        self.line_color = line_color
-        self.width = width
-        self.height = height
-        self.line_width = line_width
-
-    def _transitionable_attributes(self):
-        return super()._transitionable_attributes() + ('fill_color', 'line_color', 'width', 'height', 'line_width')
-
-    def _scaling_attributes(self):
-        return super()._scaling_attributes() + ('width', 'height', 'line_width')
 
     def render(self, image: Image, config: Config, frame: int):
         attribute_values = self.apply_transitions(frame)
