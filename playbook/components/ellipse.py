@@ -20,7 +20,6 @@ class Ellipse(BaseComponent):
         return super()._scaling_attributes() + ('width', 'height', 'line_width')
 
     def render(self, image: Image, config: Config, frame: int):
-        # x, y, width, height, line_width, font_size = self.apply_transitions(frame)
         attribute_values = self.apply_transitions(frame)
         draw = ImageDraw.Draw(image)
         draw.ellipse([(attribute_values['x'] - attribute_values['width'] // 2, attribute_values['y'] - attribute_values['height'] // 2),

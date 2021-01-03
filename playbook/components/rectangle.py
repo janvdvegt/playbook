@@ -20,15 +20,16 @@ class Rectangle(BaseComponent):
         return super()._scaling_attributes() + ('width', 'height', 'line_width')
 
     def render(self, image: Image, config: Config, frame: int):
-        x, y, width, height, line_width, font_size = self.apply_transitions(frame) 
+        attribute_values = self.apply_transitions(frame)
         draw = ImageDraw.Draw(image)
-        draw.rectangle([(x - width // 2, y - height // 2), (x + width // 2, y + height // 2)],
-                        outline=self.line_color,
-                        fill=self.fill_color,
-                        width=line_width)
-        font = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf", font_size)
-        draw.text(xy=(x, y),
+        draw.rectangle([(attribute_values['x'] - attribute_values['width'] // 2, attribute_values['y'] - attribute_values['height'] // 2),
+                       (attribute_values['x'] + attribute_values['width'] // 2, attribute_values['y'] + attribute_values['height'] // 2)],
+                        outline=attribute_values['line_color'],
+                        fill=attribute_values['fill_color'],
+                        width=attribute_values['line_width'])
+        font = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf", attribute_values['font_size'])
+        draw.text(xy=(attribute_values['x'], attribute_values['y']),
                   font=font,
                   text=self.text,
-                  fill=self.font_color,
+                  fill=attribute_values['font_color'],
                   anchor='mm')

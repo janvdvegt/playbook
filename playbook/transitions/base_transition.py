@@ -17,7 +17,6 @@ class BaseTransition:
 
     def scale_attributes(self, supersample_rate: int):
         if self.supersample_scalable and not self.supersample_scaled:
-            print(self.start_values)
             self.supersample_scaled = True
             for attribute in self.attributes:
                 self.start_values[attribute] *= supersample_rate
@@ -40,8 +39,6 @@ class BaseTransition:
                                                              end_value=self.end_values[attribute],
                                                              interpolator_value=self._get_interpolator_value(frame=frame))
             return_dict[attribute] = self.calculate_updated_attribute(current_values[attribute], updated_value)
-        if 'width' in return_dict:
-            print(return_dict['width'])
         return return_dict
 
     def calculate_updated_attribute(self, original_value, updated_value):
