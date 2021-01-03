@@ -3,14 +3,16 @@ from PIL import Image
 from config.config import Config
 from transitions import BaseTransition
 from utils import attribute
+from color.color import Color
 
 
 class BaseComponent:
     @attribute(name='x', type=float, scalable=True)
     @attribute(name='y', type=float, scalable=True)
     @attribute(name='font_size', type=int, scalable=True)
-    @attribute(name='font_color', type="color", scalable=False)
-    def __init__(self, x: int, y: int, text: str = '', font_size: int = 20, font_color: str = "#000000", **kwargs):
+    @attribute(name='font_color', type=Color, scalable=False)
+    @attribute(name="opacity", type=float, scalable=False)
+    def __init__(self, x: int, y: int, text: str = '', font_size: int = 20, font_color: str = "#000000", opacity: float = 1., **kwargs):
         self.text = text
         self.groups = []
         self.transitions = []

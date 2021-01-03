@@ -58,13 +58,16 @@ class Playbook:
         )
 
         for frame_index in range(self.number_frames):
-            image = Image.new('RGB', (self.width * self.supersample_rate, self.height * self.supersample_rate), config.background_color)
+            frame = Image.new('RGBA', (self.width * self.supersample_rate, self.height * self.supersample_rate), config.background_color.to_tuple())
             for component in self.components:
-                component.render(image, config, frame=frame_index)
-            image = image.resize((self.width, self.height))
+                layer = Image.new('RGBA', (self.width * self.supersample_rate, self.height * self.supersample_rate), (255, 255, 255, 0))
+                component.render(layer, config, frame=frame_index)
+                frame = Image.alpha_composite(frame, layer)
+                # frame.putalpha(255)
+            frame = frame.resize((self.width, self.height)).convert('RGB')
             # image.save(filename + '_' + str(frame_index) + '.png')
             process.stdin.write(
-                cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
                 .astype(np.uint8)
                 .tobytes()
             )

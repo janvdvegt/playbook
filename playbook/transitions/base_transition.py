@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from interpolators.get_interpolator import get_interpolator
-
+from color.color import Color
 
 class BaseTransition:
     def __init__(self, start_values: dict, end_values: dict,
@@ -30,8 +30,8 @@ class BaseTransition:
         return self.interpolator.interpolator_value((frame - self.start_frame) / (self.end_frame - self.start_frame))
 
     def _apply_attribute_transition(self, start_value, end_value, interpolator_value: float, attribute_type: type):
-        if attribute_type == "color":
-            return start_value
+        if attribute_type == Color:
+            return start_value.merge(end_value, interpolator_value)
         if attribute_type == float or attribute_type == int:
             return (1 - interpolator_value) * start_value + interpolator_value * end_value
         raise ValueError(f"Don't understand type {attribute_type}")

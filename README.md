@@ -16,14 +16,6 @@ Transitions are objects that change the behaviour and looks of components.
 
 ## TODO
 
-### Color
-
-Currently, color cannot be transitioned yet. It is probably best to add a Color class.
-
-### Transitions
-
-Opacity transitions which also mean we need to add opacity.
-
 ### Better interpolators
 
 The sigmoid interpolator is not great, we need to add parameterization and other interpolators.
